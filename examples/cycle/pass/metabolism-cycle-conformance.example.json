@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.5.0",
+  "case_id": "cyclecase_gen04_gen05_pass",
+  "cycle_record_path": "examples/cycle/records/metabolism-cycle.gen04-gen05.json",
+  "governor_assessment_path": "examples/pass/shift-governor-assessment.example.json",
+  "handoff_event_path": "examples/conformance/records/handoff-event.gen04.json",
+  "audit_record_path": "examples/conformance/records/audit-record.gen04.json",
+  "purification_record_path": "examples/conformance/records/state-purification-record.gen04-gen05.json",
+  "output_state_packet_path": "examples/conformance/records/state-packet.gen05.json",
+  "expected_result": "PASS",
+  "expected_violation_codes": []
+}
