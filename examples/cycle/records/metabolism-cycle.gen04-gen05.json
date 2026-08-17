@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.5.0",
+  "cycle_id": "cycle_gen04_gen05_001",
+  "source_generation": 4,
+  "target_generation": 5,
+  "created_at": "2026-08-17T02:35:00Z",
+  "record_refs": {
+    "source_state_packet_id": "pkt_gen04_20260817_001",
+    "governor_assessment_id": "gov_gen04_001",
+    "handoff_event_id": "handoff_gen04_001",
+    "audit_record_id": "audit_gen04_001",
+    "purification_record_id": "purify_gen04_001",
+    "output_state_packet_id": "pkt_gen05_20260817_001"
+  },
+  "trigger": {
+    "type": "CONTEXT_PRESSURE",
+    "mode": "NORMAL"
+  },
+  "continuity": {
+    "goal_hash_before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "goal_hash_after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "immutable_goal_preserved": true,
+    "raw_trace_inherited": false,
+    "evidence_preserved": true,
+    "cross_record_conformance_passed": true
+  },
+  "outcome": {
+    "status": "COMPLETED",
+    "next_builder_eligible": true
+  }
+}
