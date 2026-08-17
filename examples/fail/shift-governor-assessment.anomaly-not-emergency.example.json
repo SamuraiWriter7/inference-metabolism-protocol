@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.2.0",
+  "assessment_id": "gov_bad_anomaly_001",
+  "generation": 5,
+  "created_at": "2026-08-17T01:57:00Z",
+  "metrics": {
+    "context_pressure": 0.2,
+    "error_density": 0.1,
+    "loop_probability": 0.1,
+    "goal_drift": 0.1
+  },
+  "weights": {
+    "context_pressure": 0.35,
+    "error_density": 0.25,
+    "loop_probability": 0.25,
+    "goal_drift": 0.15
+  },
+  "thresholds": {
+    "prepare": 0.4,
+    "handoff": 0.6,
+    "emergency": 0.8
+  },
+  "anomaly_override": {
+    "detected": true,
+    "reasons": [
+      "REPEATED_TOOL_FAILURE"
+    ]
+  },
+  "handoff_score": 0.135,
+  "decision": "CONTINUE"
+}
