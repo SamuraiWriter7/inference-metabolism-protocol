@@ -1,0 +1,417 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/imp/schemas/state-packet.schema.json",
+  "title": "IMP State Packet",
+  "description": "Inference Metabolism Protocol v0.1 Planner-to-Builder handoff packet.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_metadata",
+    "inheritance_policy",
+    "provenance",
+    "immutable_goal",
+    "current_state",
+    "execution_plan",
+    "constraints_and_guardrails",
+    "integrity"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "packet_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packet_id",
+        "generation",
+        "created_at",
+        "handoff_reason"
+      ],
+      "properties": {
+        "packet_id": {
+          "type": "string",
+          "pattern": "^pkt_[A-Za-z0-9._-]+$"
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "handoff_reason": {
+          "enum": [
+            "MILESTONE_COMPLETED",
+            "ANOMALY_DETECTED",
+            "CONTEXT_PRESSURE",
+            "TIME_BOUNDARY"
+          ]
+        }
+      }
+    },
+    "inheritance_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_trace_inherited",
+        "evidence_preserved",
+        "minimum_sufficient_state"
+      ],
+      "properties": {
+        "raw_trace_inherited": {
+          "const": false
+        },
+        "evidence_preserved": {
+          "const": true
+        },
+        "minimum_sufficient_state": {
+          "const": true
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "previous_packet_id",
+        "builder_run_id",
+        "audit_record_id",
+        "planner_run_id"
+      ],
+      "properties": {
+        "previous_packet_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "builder_run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audit_record_id": {
+          "type": "string",
+          "pattern": "^audit_[A-Za-z0-9._-]+$"
+        },
+        "planner_run_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "immutable_goal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "goal_id",
+        "goal_hash",
+        "core_objective",
+        "definition_of_done"
+      ],
+      "properties": {
+        "goal_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "goal_hash": {
+          "type": "string",
+          "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+        },
+        "core_objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition_of_done": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "current_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verified_facts",
+        "verified_artifacts",
+        "working_assumptions",
+        "open_issues",
+        "environment"
+      ],
+      "properties": {
+        "verified_facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "fact_id",
+              "statement",
+              "evidence_refs"
+            ],
+            "properties": {
+              "fact_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_refs": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "verified_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "path_or_key",
+              "status",
+              "summary"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "file",
+                  "test",
+                  "report",
+                  "dataset",
+                  "memory_ref",
+                  "other"
+                ]
+              },
+              "path_or_key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "const": "VERIFIED_PASS"
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "working_assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "assumption_id",
+              "statement",
+              "confidence",
+              "validation_needed"
+            ],
+            "properties": {
+              "assumption_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "validation_needed": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "open_issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "issue_id",
+              "description",
+              "severity"
+            ],
+            "properties": {
+              "issue_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "severity": {
+                "enum": [
+                  "CRITICAL",
+                  "HIGH",
+                  "MEDIUM",
+                  "LOW"
+                ]
+              }
+            }
+          }
+        },
+        "environment": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "execution_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "immediate_task",
+        "subsequent_milestones"
+      ],
+      "properties": {
+        "immediate_task": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "task_id",
+            "title",
+            "instruction",
+            "expected_output"
+          ],
+          "properties": {
+            "task_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "instruction": {
+              "type": "string",
+              "minLength": 1
+            },
+            "expected_output": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "subsequent_milestones": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "constraints_and_guardrails": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "do_not_repeat",
+        "resource_budgets"
+      ],
+      "properties": {
+        "do_not_repeat": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rule_id",
+              "prohibited_action",
+              "reason",
+              "scope",
+              "expires_when"
+            ],
+            "properties": {
+              "rule_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "prohibited_action": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope": {
+                "enum": [
+                  "GENERATION",
+                  "PROJECT",
+                  "UNTIL_CONDITION"
+                ]
+              },
+              "expires_when": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "resource_budgets": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_tool_calls",
+            "target_context_tokens"
+          ],
+          "properties": {
+            "max_tool_calls": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "target_context_tokens": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "audit_status"
+      ],
+      "properties": {
+        "audit_status": {
+          "enum": [
+            "VERIFIED",
+            "PROVISIONAL"
+          ]
+        },
+        "packet_hash": {
+          "type": "string",
+          "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}
