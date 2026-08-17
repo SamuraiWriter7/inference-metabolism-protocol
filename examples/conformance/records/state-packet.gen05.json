@@ -1,0 +1,91 @@
+{
+  "schema_version": "0.1.0",
+  "packet_metadata": {
+    "packet_id": "pkt_gen05_20260817_001",
+    "generation": 5,
+    "created_at": "2026-08-17T02:22:00Z",
+    "handoff_reason": "MILESTONE_COMPLETED"
+  },
+  "inheritance_policy": {
+    "raw_trace_inherited": false,
+    "evidence_preserved": true,
+    "minimum_sufficient_state": true
+  },
+  "provenance": {
+    "previous_packet_id": "pkt_gen04_20260817_001",
+    "builder_run_id": "builder_gen04",
+    "audit_record_id": "audit_gen04_001",
+    "planner_run_id": "planner_gen04"
+  },
+  "immutable_goal": {
+    "goal_id": "goal_async_pipeline_v1",
+    "goal_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "core_objective": "Build and benchmark an asynchronous scraping pipeline in Python.",
+    "definition_of_done": [
+      "Required implementation milestones are complete.",
+      "Required tests pass."
+    ]
+  },
+  "current_state": {
+    "verified_facts": [
+      {
+        "fact_id": "FACT-021",
+        "statement": "The asynchronous retry implementation passes the required tests.",
+        "evidence_refs": [
+          "test-report:retry-021"
+        ]
+      }
+    ],
+    "verified_artifacts": [
+      {
+        "type": "file",
+        "path_or_key": "src/utils/retry.py",
+        "status": "VERIFIED_PASS",
+        "summary": "Async exponential backoff implementation verified."
+      }
+    ],
+    "working_assumptions": [
+      {
+        "assumption_id": "ASM-014",
+        "statement": "The current retry configuration is expected to remain stable under moderate production load.",
+        "confidence": 0.7,
+        "validation_needed": true
+      }
+    ],
+    "open_issues": [],
+    "environment": {
+      "python_version": "3.12.2",
+      "active_branch": "feature/async-engine"
+    }
+  },
+  "execution_plan": {
+    "immediate_task": {
+      "task_id": "TASK_GEN05_01",
+      "title": "Run production-like load test",
+      "instruction": "Run the defined load-test scenario and verify retry behavior under sustained load.",
+      "expected_output": "Load-test report and validated retry configuration."
+    },
+    "subsequent_milestones": [
+      "Review load-test results.",
+      "Finalize benchmark."
+    ]
+  },
+  "constraints_and_guardrails": {
+    "do_not_repeat": [
+      {
+        "rule_id": "DNR-014",
+        "prohibited_action": "Use synchronous sleep inside asynchronous retry paths.",
+        "reason": "The approach blocks the event loop.",
+        "scope": "PROJECT",
+        "expires_when": null
+      }
+    ],
+    "resource_budgets": {
+      "max_tool_calls": 15,
+      "target_context_tokens": 32000
+    }
+  },
+  "integrity": {
+    "audit_status": "VERIFIED"
+  }
+}
