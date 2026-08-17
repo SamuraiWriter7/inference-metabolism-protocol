@@ -1,0 +1,384 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/imp/schemas/state-purification-record.schema.json",
+  "title": "IMP State Purification Record",
+  "description": "Records how audited execution state is filtered, classified, discarded, transformed, and inherited across IMP generations.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "purification_record_id",
+    "source_generation",
+    "target_generation",
+    "created_at",
+    "source",
+    "classification",
+    "inheritance_summary",
+    "continuity_checks",
+    "output"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.3.0"
+    },
+    "purification_record_id": {
+      "type": "string",
+      "pattern": "^purify_[A-Za-z0-9._-]+$"
+    },
+    "source_generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "target_generation": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "audit_record_id",
+        "builder_run_id",
+        "planner_run_id",
+        "previous_packet_id",
+        "raw_trace_archive_refs"
+      ],
+      "properties": {
+        "audit_record_id": {
+          "type": "string",
+          "pattern": "^audit_[A-Za-z0-9._-]+$"
+        },
+        "builder_run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planner_run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "previous_packet_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "raw_trace_archive_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retained_verified_facts",
+        "retained_verified_artifacts",
+        "carried_working_assumptions",
+        "generated_guardrails",
+        "discarded_items"
+      ],
+      "properties": {
+        "retained_verified_facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "fact_id",
+              "statement",
+              "evidence_refs"
+            ],
+            "properties": {
+              "fact_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_refs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        "retained_verified_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "path_or_key",
+              "status",
+              "summary"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "file",
+                  "test",
+                  "report",
+                  "dataset",
+                  "memory_ref",
+                  "other"
+                ]
+              },
+              "path_or_key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "const": "VERIFIED_PASS"
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "carried_working_assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "assumption_id",
+              "statement",
+              "confidence",
+              "validation_needed",
+              "reason"
+            ],
+            "properties": {
+              "assumption_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "validation_needed": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "generated_guardrails": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rule_id",
+              "source_ref",
+              "prohibited_action",
+              "reason",
+              "scope",
+              "expires_when"
+            ],
+            "properties": {
+              "rule_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "prohibited_action": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope": {
+                "enum": [
+                  "GENERATION",
+                  "PROJECT",
+                  "UNTIL_CONDITION"
+                ]
+              },
+              "expires_when": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "discarded_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "item_id",
+              "source_ref",
+              "category",
+              "reason_code",
+              "reason"
+            ],
+            "properties": {
+              "item_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "category": {
+                "enum": [
+                  "RAW_TRACE",
+                  "CLAIM",
+                  "ARTIFACT",
+                  "ASSUMPTION",
+                  "PLAN",
+                  "CONSTRAINT",
+                  "OTHER"
+                ]
+              },
+              "reason_code": {
+                "enum": [
+                  "IRRELEVANT",
+                  "DUPLICATE",
+                  "STALE",
+                  "UNSUPPORTED",
+                  "SUPERSEDED",
+                  "FAILED_APPROACH",
+                  "RAW_REASONING_TRACE",
+                  "POLICY_EXCLUDED"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "inheritance_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_considered_item_count",
+        "inherited_item_count",
+        "discarded_item_count",
+        "raw_trace_items_inherited",
+        "inheritance_ratio"
+      ],
+      "properties": {
+        "total_considered_item_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "inherited_item_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "discarded_item_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "raw_trace_items_inherited": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inheritance_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "continuity_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "goal_hash_before",
+        "goal_hash_after",
+        "immutable_goal_preserved",
+        "evidence_traceability_preserved",
+        "fact_assumption_separation_preserved",
+        "minimum_sufficient_state_satisfied"
+      ],
+      "properties": {
+        "goal_hash_before": {
+          "type": "string",
+          "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+        },
+        "goal_hash_after": {
+          "type": "string",
+          "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+        },
+        "immutable_goal_preserved": {
+          "type": "boolean"
+        },
+        "evidence_traceability_preserved": {
+          "type": "boolean"
+        },
+        "fact_assumption_separation_preserved": {
+          "type": "boolean"
+        },
+        "minimum_sufficient_state_satisfied": {
+          "type": "boolean"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state_packet_id",
+        "status"
+      ],
+      "properties": {
+        "state_packet_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "READY_FOR_HANDOFF",
+            "REQUIRES_REWORK",
+            "REJECTED"
+          ]
+        }
+      }
+    }
+  }
+}
