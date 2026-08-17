@@ -1,0 +1,12 @@
+{
+  "schema_version": "0.1.0",
+  "audit_record_id": "audit_gen03_invalid",
+  "generation": 3,
+  "auditor_run_id": "auditor_gen03",
+  "created_at": "2026-08-17T00:33:00Z",
+  "findings": [],
+  "verified_facts": [],
+  "verified_artifacts": [],
+  "decision": "PASS",
+  "state_eligible": false
+}
