@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1.0",
+  "audit_record_id": "audit_gen04_001",
+  "generation": 4,
+  "auditor_run_id": "auditor_gen04",
+  "created_at": "2026-08-17T02:20:00Z",
+  "findings": [
+    {
+      "finding_id": "F-021",
+      "severity": "INFO",
+      "statement": "Async retry implementation passed the required tests."
+    }
+  ],
+  "verified_facts": [
+    "The asynchronous retry implementation passes the required tests."
+  ],
+  "verified_artifacts": [
+    "src/utils/retry.py"
+  ],
+  "decision": "PASS",
+  "state_eligible": true
+}
