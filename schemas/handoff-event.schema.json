@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/imp/schemas/handoff-event.schema.json",
+  "title": "IMP Handoff Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "handoff_event_id",
+    "current_generation",
+    "next_generation",
+    "occurred_at",
+    "trigger",
+    "source_role",
+    "destination_role"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "handoff_event_id": {
+      "type": "string",
+      "pattern": "^handoff_[A-Za-z0-9._-]+$"
+    },
+    "current_generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "next_generation": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "mode"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "MILESTONE_COMPLETED",
+            "ANOMALY_DETECTED",
+            "CONTEXT_PRESSURE",
+            "TIME_BOUNDARY"
+          ]
+        },
+        "mode": {
+          "enum": [
+            "NORMAL",
+            "INTERRUPT"
+          ]
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "details": {
+          "type": "string"
+        }
+      }
+    },
+    "source_role": {
+      "const": "BUILDER"
+    },
+    "destination_role": {
+      "const": "AUDITOR"
+    }
+  }
+}
