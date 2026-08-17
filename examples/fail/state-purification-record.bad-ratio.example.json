@@ -1,0 +1,104 @@
+{
+  "schema_version": "0.3.0",
+  "purification_record_id": "purify_gen04_001",
+  "source_generation": 4,
+  "target_generation": 5,
+  "created_at": "2026-08-17T01:55:00Z",
+  "source": {
+    "audit_record_id": "audit_gen04_001",
+    "builder_run_id": "builder_gen04",
+    "planner_run_id": "planner_gen04",
+    "previous_packet_id": "pkt_gen04_20260817_001",
+    "raw_trace_archive_refs": [
+      "trace:builder-gen04:001",
+      "trace:builder-gen04:002"
+    ]
+  },
+  "classification": {
+    "retained_verified_facts": [
+      {
+        "fact_id": "FACT-021",
+        "statement": "The asynchronous retry implementation passes the required tests.",
+        "evidence_refs": [
+          "test-report:retry-021"
+        ]
+      }
+    ],
+    "retained_verified_artifacts": [
+      {
+        "type": "file",
+        "path_or_key": "src/utils/retry.py",
+        "status": "VERIFIED_PASS",
+        "summary": "Async exponential backoff implementation verified."
+      }
+    ],
+    "carried_working_assumptions": [
+      {
+        "assumption_id": "ASM-014",
+        "statement": "The current retry configuration is expected to remain stable under moderate production load.",
+        "confidence": 0.7,
+        "validation_needed": true,
+        "reason": "Load-test evidence is not yet available."
+      }
+    ],
+    "generated_guardrails": [
+      {
+        "rule_id": "DNR-014",
+        "source_ref": "trace:builder-gen04:001",
+        "prohibited_action": "Use synchronous sleep inside asynchronous retry paths.",
+        "reason": "The approach blocks the event loop and caused previous execution degradation.",
+        "scope": "PROJECT",
+        "expires_when": null
+      }
+    ],
+    "discarded_items": [
+      {
+        "item_id": "DROP-001",
+        "source_ref": "trace:builder-gen04:001",
+        "category": "RAW_TRACE",
+        "reason_code": "RAW_REASONING_TRACE",
+        "reason": "Raw trial-and-error reasoning is archived but not inherited."
+      },
+      {
+        "item_id": "DROP-002",
+        "source_ref": "trace:builder-gen04:002",
+        "category": "RAW_TRACE",
+        "reason_code": "RAW_REASONING_TRACE",
+        "reason": "Raw execution narrative is unnecessary for the next Builder."
+      },
+      {
+        "item_id": "DROP-003",
+        "source_ref": "claim:retry-old-003",
+        "category": "CLAIM",
+        "reason_code": "SUPERSEDED",
+        "reason": "The earlier retry hypothesis was replaced by verified test results."
+      },
+      {
+        "item_id": "DROP-004",
+        "source_ref": "plan:gen04-old",
+        "category": "PLAN",
+        "reason_code": "STALE",
+        "reason": "The plan belongs to the completed generation and is no longer actionable."
+      }
+    ]
+  },
+  "inheritance_summary": {
+    "total_considered_item_count": 8,
+    "inherited_item_count": 4,
+    "discarded_item_count": 4,
+    "raw_trace_items_inherited": 0,
+    "inheritance_ratio": 0.8
+  },
+  "continuity_checks": {
+    "goal_hash_before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "goal_hash_after": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "immutable_goal_preserved": true,
+    "evidence_traceability_preserved": true,
+    "fact_assumption_separation_preserved": true,
+    "minimum_sufficient_state_satisfied": true
+  },
+  "output": {
+    "state_packet_id": "pkt_gen05_20260817_001",
+    "status": "READY_FOR_HANDOFF"
+  }
+}
