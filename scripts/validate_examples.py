@@ -23,6 +23,8 @@ SCHEMA_FILES = {
     "audit-record": SCHEMA_DIR / "audit-record.schema.json",
     "shift-governor-assessment":
         SCHEMA_DIR / "shift-governor-assessment.schema.json",
+    "state-purification-record":
+        SCHEMA_DIR / "state-purification-record.schema.json",
 }
 
 
@@ -211,6 +213,162 @@ def semantic_errors(
                     f"actual={data['decision']})"
                 )
 
+    elif record_type == "state-purification-record":
+        source_generation = data["source_generation"]
+        target_generation = data["target_generation"]
+
+        if target_generation != source_generation + 1:
+            errors.append(
+                "target_generation must equal "
+                "source_generation + 1"
+            )
+
+        source = data["source"]
+
+        if (
+            source_generation == 1
+            and source["previous_packet_id"] is not None
+        ):
+            errors.append(
+                "source generation 1 must have "
+                "previous_packet_id = null"
+            )
+
+        if (
+            source_generation > 1
+            and source["previous_packet_id"] is None
+        ):
+            errors.append(
+                "source generation > 1 requires "
+                "previous_packet_id"
+            )
+
+        classification = data["classification"]
+
+        inherited_count = (
+            len(classification["retained_verified_facts"])
+            + len(
+                classification[
+                    "retained_verified_artifacts"
+                ]
+            )
+            + len(
+                classification[
+                    "carried_working_assumptions"
+                ]
+            )
+            + len(
+                classification[
+                    "generated_guardrails"
+                ]
+            )
+        )
+
+        discarded_count = len(
+            classification["discarded_items"]
+        )
+
+        total_count = inherited_count + discarded_count
+
+        summary = data["inheritance_summary"]
+
+        if (
+            summary["inherited_item_count"]
+            != inherited_count
+        ):
+            errors.append(
+                "inherited_item_count does not match "
+                "classified inherited items"
+            )
+
+        if (
+            summary["discarded_item_count"]
+            != discarded_count
+        ):
+            errors.append(
+                "discarded_item_count does not match "
+                "classified discarded items"
+            )
+
+        if (
+            summary["total_considered_item_count"]
+            != total_count
+        ):
+            errors.append(
+                "total_considered_item_count must equal "
+                "inherited items + discarded items"
+            )
+
+        if summary["raw_trace_items_inherited"] != 0:
+            errors.append(
+                "raw reasoning trace inheritance must equal 0"
+            )
+
+        if total_count > 0:
+            expected_ratio = inherited_count / total_count
+
+            if (
+                abs(
+                    summary["inheritance_ratio"]
+                    - expected_ratio
+                )
+                > FLOAT_TOLERANCE
+            ):
+                errors.append(
+                    "inheritance_ratio does not match "
+                    "inherited_item_count / "
+                    "total_considered_item_count "
+                    f"(expected={expected_ratio:.6f}, "
+                    f"actual="
+                    f"{summary['inheritance_ratio']:.6f})"
+                )
+
+        continuity = data["continuity_checks"]
+
+        hashes_equal = (
+            continuity["goal_hash_before"]
+            == continuity["goal_hash_after"]
+        )
+
+        if (
+            continuity["immutable_goal_preserved"]
+            != hashes_equal
+        ):
+            errors.append(
+                "immutable_goal_preserved must match "
+                "goal-hash continuity"
+            )
+
+        output = data["output"]
+        status = output["status"]
+
+        if status == "READY_FOR_HANDOFF":
+            if output["state_packet_id"] is None:
+                errors.append(
+                    "READY_FOR_HANDOFF requires "
+                    "state_packet_id"
+                )
+
+            required_checks = (
+                "immutable_goal_preserved",
+                "evidence_traceability_preserved",
+                "fact_assumption_separation_preserved",
+                "minimum_sufficient_state_satisfied",
+            )
+
+            failed_checks = [
+                key
+                for key in required_checks
+                if not continuity[key]
+            ]
+
+            if failed_checks:
+                errors.append(
+                    "READY_FOR_HANDOFF requires all "
+                    "continuity checks to pass: "
+                    + ", ".join(failed_checks)
+                )
+
     return errors
 
 
@@ -256,7 +414,7 @@ def validate_file(
 def main() -> int:
     print(
         "=== Inference Metabolism Protocol "
-        "v0.2 Validation ==="
+        "v0.3 Validation ==="
     )
 
     validators: dict[str, Draft202012Validator] = {}
@@ -331,8 +489,6 @@ def main() -> int:
 
         print(f"\n- {path.relative_to(ROOT)}")
 
-        # A malformed JSON document is NOT considered a valid
-        # negative conformance example.
         if syntax_errors:
             unexpected += 1
             print("[unexpected-syntax-failure]")
