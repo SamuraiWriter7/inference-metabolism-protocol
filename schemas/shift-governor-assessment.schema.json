@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/imp/schemas/shift-governor-assessment.schema.json",
+  "title": "IMP Shift Governor Assessment",
+  "description": "Reasoning-health assessment used by the IMP Shift Governor.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "generation",
+    "created_at",
+    "metrics",
+    "weights",
+    "thresholds",
+    "anomaly_override",
+    "handoff_score",
+    "decision"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^gov_[A-Za-z0-9._-]+$"
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_pressure",
+        "error_density",
+        "loop_probability",
+        "goal_drift"
+      ],
+      "properties": {
+        "context_pressure": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "error_density": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "loop_probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "goal_drift": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "weights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_pressure",
+        "error_density",
+        "loop_probability",
+        "goal_drift"
+      ],
+      "properties": {
+        "context_pressure": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "error_density": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "loop_probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "goal_drift": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prepare",
+        "handoff",
+        "emergency"
+      ],
+      "properties": {
+        "prepare": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "handoff": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "emergency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "anomaly_override": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "detected",
+        "reasons"
+      ],
+      "properties": {
+        "detected": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "handoff_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "decision": {
+      "enum": [
+        "CONTINUE",
+        "PREPARE",
+        "HANDOFF",
+        "EMERGENCY"
+      ]
+    }
+  }
+}
