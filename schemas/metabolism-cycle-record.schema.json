@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/imp/schemas/metabolism-cycle-record.schema.json",
+  "title": "IMP Metabolism Cycle Record",
+  "description": "Canonical lifecycle record for one complete Inference Metabolism Protocol generation transition.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "cycle_id",
+    "source_generation",
+    "target_generation",
+    "created_at",
+    "record_refs",
+    "trigger",
+    "continuity",
+    "outcome"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.5.0"
+    },
+    "cycle_id": {
+      "type": "string",
+      "pattern": "^cycle_[A-Za-z0-9._-]+$"
+    },
+    "source_generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "target_generation": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "record_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_state_packet_id",
+        "governor_assessment_id",
+        "handoff_event_id",
+        "audit_record_id",
+        "purification_record_id",
+        "output_state_packet_id"
+      ],
+      "properties": {
+        "source_state_packet_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "governor_assessment_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "handoff_event_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audit_record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purification_record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_state_packet_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "mode"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "MILESTONE_COMPLETED",
+            "ANOMALY_DETECTED",
+            "CONTEXT_PRESSURE",
+            "TIME_BOUNDARY"
+          ]
+        },
+        "mode": {
+          "enum": [
+            "NORMAL",
+            "INTERRUPT"
+          ]
+        }
+      }
+    },
+    "continuity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "goal_hash_before",
+        "goal_hash_after",
+        "immutable_goal_preserved",
+        "raw_trace_inherited",
+        "evidence_preserved",
+        "cross_record_conformance_passed"
+      ],
+      "properties": {
+        "goal_hash_before": {
+          "type": "string",
+          "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+        },
+        "goal_hash_after": {
+          "type": "string",
+          "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+        },
+        "immutable_goal_preserved": {
+          "type": "boolean"
+        },
+        "raw_trace_inherited": {
+          "type": "boolean"
+        },
+        "evidence_preserved": {
+          "type": "boolean"
+        },
+        "cross_record_conformance_passed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "next_builder_eligible"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "COMPLETED",
+            "REQUIRES_REWORK",
+            "ABORTED"
+          ]
+        },
+        "next_builder_eligible": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
