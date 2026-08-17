@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1.0",
+  "handoff_event_id": "handoff_gen04_001",
+  "current_generation": 4,
+  "next_generation": 5,
+  "occurred_at": "2026-08-17T02:20:00Z",
+  "trigger": {
+    "type": "CONTEXT_PRESSURE",
+    "mode": "NORMAL",
+    "score": 0.65,
+    "details": "Reasoning-health assessment crossed the handoff threshold."
+  },
+  "source_role": "BUILDER",
+  "destination_role": "AUDITOR"
+}
