@@ -1,0 +1,10 @@
+"immutable_goal": {
+  "goal_id": "goal_async_pipeline_v1",
+  "goal_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "core_objective": "Build and benchmark an asynchronous scraping pipeline in Python.",
+  "definition_of_done": [
+    "Throughput reaches the project target.",
+    "Error rate is within the accepted threshold.",
+    "Required tests pass."
+  ]
+}
