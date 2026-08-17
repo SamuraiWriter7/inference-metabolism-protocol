@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1.0",
+  "handoff_event_id": "handoff_gen03_anomaly",
+  "current_generation": 3,
+  "next_generation": 4,
+  "occurred_at": "2026-08-17T00:30:00Z",
+  "trigger": {
+    "type": "ANOMALY_DETECTED",
+    "mode": "NORMAL",
+    "score": 0.91,
+    "details": "Repeated execution loop detected."
+  },
+  "source_role": "BUILDER",
+  "destination_role": "AUDITOR"
+}
