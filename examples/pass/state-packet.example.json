@@ -1,0 +1,98 @@
+{
+  "schema_version": "0.1.0",
+  "packet_metadata": {
+    "packet_id": "pkt_gen04_20260817_001",
+    "generation": 4,
+    "created_at": "2026-08-17T00:35:00Z",
+    "handoff_reason": "MILESTONE_COMPLETED"
+  },
+  "inheritance_policy": {
+    "raw_trace_inherited": false,
+    "evidence_preserved": true,
+    "minimum_sufficient_state": true
+  },
+  "provenance": {
+    "previous_packet_id": "pkt_gen03_20260817_004",
+    "builder_run_id": "builder_gen03",
+    "audit_record_id": "audit_gen03_004",
+    "planner_run_id": "planner_gen03"
+  },
+  "immutable_goal": {
+    "goal_id": "goal_async_pipeline_v1",
+    "goal_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "core_objective": "Build and benchmark an asynchronous scraping pipeline in Python.",
+    "definition_of_done": [
+      "Throughput reaches the project target.",
+      "Error rate is within the accepted threshold.",
+      "Required tests pass."
+    ]
+  },
+  "current_state": {
+    "verified_facts": [
+      {
+        "fact_id": "FACT-001",
+        "statement": "The asynchronous engine passes the current unit test suite.",
+        "evidence_refs": [
+          "test-report:122"
+        ]
+      }
+    ],
+    "verified_artifacts": [
+      {
+        "type": "file",
+        "path_or_key": "src/crawler/engine.py",
+        "status": "VERIFIED_PASS",
+        "summary": "Base asyncio execution loop implemented and tested."
+      }
+    ],
+    "working_assumptions": [
+      {
+        "assumption_id": "ASM-001",
+        "statement": "Exponential backoff should reduce transient 429 failures.",
+        "confidence": 0.75,
+        "validation_needed": true
+      }
+    ],
+    "open_issues": [
+      {
+        "issue_id": "ISSUE-002",
+        "description": "Retry handling for HTTP 429 is not implemented.",
+        "severity": "HIGH"
+      }
+    ],
+    "environment": {
+      "python_version": "3.12.2",
+      "active_branch": "feature/async-engine"
+    }
+  },
+  "execution_plan": {
+    "immediate_task": {
+      "task_id": "TASK_GEN04_01",
+      "title": "Implement async exponential backoff",
+      "instruction": "Create src/utils/retry.py and implement an async retry helper for transient HTTP 429 failures.",
+      "expected_output": "src/utils/retry.py plus passing retry tests."
+    },
+    "subsequent_milestones": [
+      "Add deduplication queue.",
+      "Run load benchmark."
+    ]
+  },
+  "constraints_and_guardrails": {
+    "do_not_repeat": [
+      {
+        "rule_id": "DNR-001",
+        "prohibited_action": "Use time.sleep() inside async execution paths.",
+        "reason": "It blocks the event loop.",
+        "scope": "PROJECT",
+        "expires_when": null
+      }
+    ],
+    "resource_budgets": {
+      "max_tool_calls": 15,
+      "target_context_tokens": 32000
+    }
+  },
+  "integrity": {
+    "audit_status": "VERIFIED"
+  }
+}
