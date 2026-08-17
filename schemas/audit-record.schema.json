@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/imp/schemas/audit-record.schema.json",
+  "title": "IMP Audit Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "audit_record_id",
+    "generation",
+    "auditor_run_id",
+    "created_at",
+    "findings",
+    "verified_facts",
+    "verified_artifacts",
+    "decision",
+    "state_eligible"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "audit_record_id": {
+      "type": "string",
+      "pattern": "^audit_[A-Za-z0-9._-]+$"
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "auditor_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "finding_id",
+          "severity",
+          "statement"
+        ],
+        "properties": {
+          "finding_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "CRITICAL",
+              "HIGH",
+              "MEDIUM",
+              "LOW",
+              "INFO"
+            ]
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "verified_facts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "verified_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "decision": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NEEDS_REWORK"
+      ]
+    },
+    "state_eligible": {
+      "type": "boolean"
+    }
+  }
+}
