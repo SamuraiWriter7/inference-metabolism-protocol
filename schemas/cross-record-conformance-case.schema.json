@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/imp/schemas/cross-record-conformance-case.schema.json",
+  "title": "IMP Cross-Record Conformance Case",
+  "description": "Defines a cross-record conformance test across Audit Record, State Purification Record, and State Packet.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "audit_record_path",
+    "purification_record_path",
+    "state_packet_path",
+    "expected_result",
+    "expected_violation_codes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.4.0"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^cross_[A-Za-z0-9._-]+$"
+    },
+    "audit_record_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purification_record_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state_packet_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expected_result": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "expected_violation_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "LINKED_RECORD_INVALID",
+          "GENERATION_MISMATCH",
+          "AUDIT_REFERENCE_MISMATCH",
+          "STATE_PACKET_REFERENCE_MISMATCH",
+          "PROVENANCE_MISMATCH",
+          "GOAL_HASH_MISMATCH",
+          "UNAUDITED_FACT_RETAINED",
+          "UNAUDITED_ARTIFACT_RETAINED",
+          "PACKET_FACT_SET_MISMATCH",
+          "PACKET_ARTIFACT_SET_MISMATCH",
+          "PACKET_ASSUMPTION_SET_MISMATCH",
+          "PACKET_GUARDRAIL_SET_MISMATCH"
+        ]
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "expected_result": {
+            "const": "PASS"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "expected_violation_codes": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "expected_result": {
+            "const": "FAIL"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "expected_violation_codes": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}
