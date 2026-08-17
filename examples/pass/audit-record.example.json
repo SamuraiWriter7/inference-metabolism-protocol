@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1.0",
+  "audit_record_id": "audit_gen03_004",
+  "generation": 3,
+  "auditor_run_id": "auditor_gen03",
+  "created_at": "2026-08-17T00:33:00Z",
+  "findings": [
+    {
+      "finding_id": "F-001",
+      "severity": "INFO",
+      "statement": "Current async engine passes required tests."
+    }
+  ],
+  "verified_facts": [
+    "The asynchronous engine passes the current unit test suite."
+  ],
+  "verified_artifacts": [
+    "src/crawler/engine.py"
+  ],
+  "decision": "PASS",
+  "state_eligible": true
+}
